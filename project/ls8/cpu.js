@@ -9,8 +9,14 @@ const fs = require('fs');
 const HLT  = 0b00011011; // Halt CPU
 // !!! IMPLEMENT ME
 const LDI = 0b00000100; // LDI
+const ADD = 0b00001100; // ADD
 const MUL = 0b00000101; // MUL
 const PRN = 0b00000110; // PRN
+const PUSH = 0b00001010; // PUSH
+const POP = 0b00001011; // POP
+const CALL = 0b00001111; // CALL
+const RET = 0b00010000; // RET
+const JMP = 0b00010001; // JMP
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -42,7 +48,13 @@ class CPU {
         // !!! IMPLEMENT ME
         bt[LDI] = this.LDI; // LDI
         bt[MUL] = this.MUL; // MUL
+        bt[ADD] = this.ADD; // MUL
         bt[PRN] = this.PRN; // PRN
+        bt[PUSH] = this.PUSH; // PUSH
+        bt[POP] = this.POP; // POP
+        bt[CALL] = this.CALL; // CALL
+        bt[RET] = this.RET; // RET
+        bt[JMP] = this.JMP; // JMP
 
 		this.branchTable = bt;
 	}
