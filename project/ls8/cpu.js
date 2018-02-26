@@ -8,9 +8,9 @@ const fs = require('fs');
 
 const HLT  = 0b00011011; // Halt CPU
 // !!! IMPLEMENT ME
-// LDI
-// MUL
-// PRN
+const LDI = 0b00000100; // LDI
+const MUL = 0b00000101; // MUL
+const PRN = 0b00000110; // PRN
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -40,9 +40,9 @@ class CPU {
 
         bt[HLT] = this.HLT;
         // !!! IMPLEMENT ME
-        // LDI
-        // MUL
-        // PRN
+        bt[LDI] = this.LDI; // LDI
+        bt[MUL] = this.MUL; // MUL
+        bt[PRN] = this.PRN; // PRN
 
 		this.branchTable = bt;
 	}
@@ -81,6 +81,7 @@ class CPU {
         switch (op) {
             case 'MUL':
                 // !!! IMPLEMENT ME
+                this.reg[regA] = valA * valB & 0b11111111;
                 break;
         }
     }
@@ -91,6 +92,7 @@ class CPU {
     tick() {
         // Load the instruction register (OR) from the current PC
         // !!! IMPLEMENT ME
+        this.reg.IR = this.ram.read(this.reg.PC);
 
         // Debugging output
         //console.log(`${this.reg.PC}: ${this.reg.IR.toString(2)}`);
@@ -99,10 +101,19 @@ class CPU {
         // appropriate hander in the branchTable
         // !!! IMPLEMENT ME
         // let handler = ...
+        const handler = this.branchTable[this.reg.IR];
 
         // Check that the handler is defined, halt if not (invalid
         // instruction)
         // !!! IMPLEMENT ME
+        if (!handler) {
+            console.error(`Invalid instruction at ${this.reg.PC} : ${this.reg.IR}`);
+            this.stopClock();
+            return;
+        }
+
+        let operandA = this.mem.read(this.reg.PC + 1);
+        let operandB = this.mem.read(this.reg.PC + 2);
 
         // We need to use call() so we can set the "this" value inside
         // the handler (otherwise it will be undefined in the handler)
@@ -110,6 +121,7 @@ class CPU {
 
         // Increment the PC register to go to the next instruction
         // !!! IMPLEMENT ME
+        
     }
 
     // INSTRUCTION HANDLER CODE:
@@ -119,6 +131,7 @@ class CPU {
      */
     HLT() {
         // !!! IMPLEMENT ME
+        this.stopClock();
     }
 
     /**
@@ -126,6 +139,12 @@ class CPU {
      */
     LDI() {
         // !!! IMPLEMENT ME
+        const regA = this.ram.read(this.reg.PC + 1);
+        const immediate = this.ram.read(this.reg.PC + 2);
+
+        this.reg[regA] = immediate;
+
+        this.reg.PC += 3;
     }
 
     /**
@@ -133,6 +152,11 @@ class CPU {
      */
     MUL() {
         // !!! IMPLEMENT ME
+        const regA = this.ram.read(this.reg.PC + 1);
+        const regB = this.ram.read(this.reg.PC + 2);
+
+        this.alu('MUL', regA, regB);
+        this.reg.PC += 3;
     }
 
     /**
@@ -140,6 +164,10 @@ class CPU {
      */
     PRN() {
         // !!! IMPLEMENT ME
+        const regA = this.ram.read(this.reg.PC + 1);
+        console.log(this.reg[regA]);
+
+        this.reg.PC += 2;
     }
 }
 

@@ -18,18 +18,16 @@ function processFile(content, cpu, onComplete) {
     for (let line of lines) {
 
         // !!! IMPLEMENT ME
-
         // Strip comments
-
         // Remove whitespace from either end of the line
-
         // Ignore empty lines
-
         // Convert from binary string to numeric value
-
         // Store in the CPU with the .poke() function
-
         // And on to the next one
+        line = line.replace(/#(.*)|\s/g, '');
+        if (line.length === 0) continue;
+        let val = parseInt(line, 2);
+        cpu.poke(curAddr, val);
         curAddr++;
     }
 
