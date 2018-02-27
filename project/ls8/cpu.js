@@ -124,8 +124,8 @@ class CPU {
             return;
         }
 
-        let operandA = this.mem.read(this.reg.PC + 1);
-        let operandB = this.mem.read(this.reg.PC + 2);
+        let operandA = this.ram.read(this.reg.PC + 1);
+        let operandB = this.ram.read(this.reg.PC + 2);
 
         // We need to use call() so we can set the "this" value inside
         // the handler (otherwise it will be undefined in the handler)
@@ -133,6 +133,7 @@ class CPU {
 
         // Increment the PC register to go to the next instruction
         // !!! IMPLEMENT ME
+        this.reg.PC += ((this.reg.IR >> 6) & 0b00000011) + 1;
         
     }
 
@@ -149,37 +150,25 @@ class CPU {
     /**
      * LDI R,I
      */
-    LDI() {
+    LDI(reg, value) {
         // !!! IMPLEMENT ME
-        const regA = this.ram.read(this.reg.PC + 1);
-        const immediate = this.ram.read(this.reg.PC + 2);
-
-        this.reg[regA] = immediate;
-
-        this.reg.PC += 3;
+        this.reg[regNum] = value;
     }
 
     /**
      * MUL R,R
      */
-    MUL() {
+    MUL(regA, regB) {
         // !!! IMPLEMENT ME
-        const regA = this.ram.read(this.reg.PC + 1);
-        const regB = this.ram.read(this.reg.PC + 2);
-
         this.alu('MUL', regA, regB);
-        this.reg.PC += 3;
     }
 
     /**
      * PRN R
      */
-    PRN() {
+    PRN(regA) {
         // !!! IMPLEMENT ME
-        const regA = this.ram.read(this.reg.PC + 1);
         console.log(this.reg[regA]);
-
-        this.reg.PC += 2;
     }
 }
 
