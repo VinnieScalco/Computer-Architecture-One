@@ -11,6 +11,7 @@ class RAM {
      * Write (store) MDR value at address MAR
      */
     write(MAR, MDR) {
+        // memory data register(what) and memory address register (where)
         // !!! IMPLEMENT ME
         // write the value in the MDR to the address MAR
         this.mem[MAR] = MDR;
